@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/leeduyoung/Server_side_javascript/issues"
   },
-  "homepage": "https://github.com/leeduyoung/Server_side_javascript#readme"
+  "homepage": "https://github.com/leeduyoung/Server_side_javascript#readme",
+  "dependencies": {
+    "underscore": "^1.8.3"
+  }
 }
