@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/leeduyoung/Server_side_javascript#readme",
   "dependencies": {
+    "express": "^4.13.4",
     "underscore": "^1.8.3"
   }
 }
