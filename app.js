@@ -13,6 +13,34 @@ app.use(express.static('public'));
 // 웹상에서 html코드 이쁘게 보이게 하기.
 app.locals.pretty = true;
 
+app.get('/topic', function(req, res){
+  var topics = ['Javascript', 'Nodejs', 'Express', 'Jade'];
+  var lis = '';
+  var time = new Date();
+  for (var i = 0; i < topics.length; i++) {
+    //lis = lis + '<li>'+topics[i]+'</li>';
+    lis += '<a href="/topic?id='+i+'">'+topics[i]+'</a><br>'
+  }
+  var output = `<!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    ${lis}<br>
+    ${topics[req.query.id]}<br>
+    ${time}
+  </body>
+  </html>
+`;
+  res.send(output);
+
+  //res.send(topics[req.query.id]);
+  //res.send(req.query.id + ',' + req.query.name); //여러개의 값을 받기
+  //res.send('Hello');
+});
+
 app.get('/template', function(req, res){
   res.render('temp', {time:new Date(), _title:'Jade', _subtitle:'Jade를 배워봅니다.'});
   //res.send();
