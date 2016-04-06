@@ -9,16 +9,37 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.locals.pretty = true;
 
 app.get('/topic/new', function(req, res){
-  res.render('new');
-});
-
-app.get('/topic', function(req, res){
   fs.readdir('data', function(err, files){
     if(err){
       console.log(err);
       res.status(500).send('Internal Server Error');
     }
-    res.render('view', {topics:files}); //인자구성. template파일 이름, 전달할 객체
+    res.render('new', {topics:files});
+  });
+});
+
+app.get(['/topic', '/topic/:id'], function(req, res){
+  fs.readdir('data', function(err, files){
+    if(err){
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    }
+
+    var id = req.params.id;
+    if(id){
+      // id가 존재할 경우
+      fs.readFile('data/'+id, 'utf-8', function(err, data){
+        if(err){
+          console.log(err);
+          res.status(500).send('Internal Server Error');
+        }
+        //res.send(data.toString());
+        res.render('view', {topics:files, title:id, description:data});
+      });
+    }
+    else {
+      res.render('view', {topics:files}); //인자구성. template파일 이름, 전달할 객체
+    }
   });
 });
 
@@ -30,30 +51,42 @@ app.post('/topic', function(req, res){
       console.log(err);
       res.status(500).send('Internal Server Error');
     }
-    res.send('Success!!');
+    res.redirect('/topic');
   });
 });
 
-app.get('/topic/:id', function(req, res){
+// app.get('/topic/:id', function(req, res){
+//
+//   fs.readdir('data', function(err, files){
+//     if(err){
+//       console.log(err);
+//       res.status(500).send('Internal Server Error');
+//     }
+//
+//     var id = req.params.id;
+//     fs.readFile('data/'+id, 'utf-8', function(err, data){
+//       if(err){
+//         console.log(err);
+//         res.status(500).send('Internal Server Error');
+//       }
+//       //res.send(data.toString());
+//       res.render('view', {topics:files, title:id, description:data});
+//     });
+//     //res.render('view', {topics:files}); //인자구성. template파일 이름, 전달할 객체
+//   });
+// });
 
-  fs.readdir('data', function(err, files){
-    if(err){
-      console.log(err);
-      res.status(500).send('Internal Server Error');
-    }
-
-    var id = req.params.id;
-    fs.readFile('data/'+id, 'utf-8', function(err, data){
-      if(err){
-        console.log(err);
-        res.status(500).send('Internal Server Error');
-      }
-      //res.send(data.toString());
-      res.render('view', {topics:files, title:id, description:data});
-    });
-    //res.render('view', {topics:files}); //인자구성. template파일 이름, 전달할 객체
-  });
-});
+// app.post('/topic', function(req, res){
+//   var title = req.body.title;
+//   var description = req.body.description;
+//   fs.writeFile('data/'+title, description, function(err){
+//     if(err){
+//       console.log(err);
+//       res.status(500).send('Internal Server Error');
+//     }
+//     res.send('Success!!');
+//   });
+// });
 
 // 위의 하나의 라우터로 모두 처리한다.
 // app.get('/topic/Node.js', function(req, res){
