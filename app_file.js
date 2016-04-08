@@ -2,11 +2,34 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var fs = require('fs');
+var multer = require('multer');
+var storage = multer.diskStorage({ //callback함수 안에 여러가지 조건문 등을 넣어서 처리 할 수 있다.
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    //cb(null, file.originalname + '-' + Date.now())
+    cb(null, file.originalname)
+  }
+});
+//var upload = multer({dest : 'uploads/'}); //multer모듈을 사용할 수 있도록 해줌. (경로설정)
+var upload = multer({storage: storage}); //storage 속성은 dest보다 더 구체적으로 설정할 수 있다. 저장경로, 저장이름
 
 app.set('views', './views_file');
 app.set('view engine', 'jade');
+app.use('/user', express.static('uploads')); //uploads 디렉터리의 이미지를 /user 라우터를 통하여 제공
 app.use(bodyParser.urlencoded({extended: false}));
 app.locals.pretty = true;
+
+app.get('/upload', function(req, res){
+  res.render('upload');
+});
+
+// upload.single('avatar') -
+app.post('/upload',  upload.single('userfile'), function(req, res){
+  console.log(req.file);
+  res.send('uploaded : '+req.file.originalname);
+});
 
 app.get('/topic/new', function(req, res){
   fs.readdir('data', function(err, files){
