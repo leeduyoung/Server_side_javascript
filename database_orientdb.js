@@ -23,36 +23,36 @@ console.log('Using database: ' + db.name);
 // });
 
 // select
-// var sql = 'select * from topic where @rid=:rid';
-// var param = {
-//   params:{
-//     rid:'#12:0'
-//   }
-// };
-// db.query(sql, param).then(function(results){
-//   console.log(results);
-// });
+var sql = 'select * from topic where @rid=:rid';
+var param = {
+  params:{
+    rid:'#12:0'
+  }
+};
+db.query(sql, param).then(function(results){
+  console.log(results);
+});
 
 //insert
-// var sql = 'insert into topic(title, description) values(:title, :description)';
-// db.query(sql, {
-//   params:{
-//     title: 'Express',
-//     description: 'Express is framework for web'
-//   }
-// }).then(function(results){
-//   console.log(results);
-// });
+var sql = 'insert into topic(title, description) values(:title, :description)';
+db.query(sql, {
+  params:{
+    title: 'Expres2831s',
+    description: 'Express is framework for web'
+  }
+}).then(function(results){
+  console.log(results);
+});
 
 //delete
-// var sql = 'delete from topic where title=:title';
-// db.query(sql, {
-//   params:{
-//     title: 'Express'
-//   }
-// }).then(function(results){
-//   console.log(results);
-// });
+var sql = 'delete from topic where title=:title';
+db.query(sql, {
+  params:{
+    title: 'Express'
+  }
+}).then(function(results){
+  console.log(results);
+});
 
 //update
 var sql = 'update topic set title=:title where @rid=:rid';
