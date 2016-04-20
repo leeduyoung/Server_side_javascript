@@ -2,7 +2,7 @@ var express = require('express');
 var app = express(); // cookie 기능을 가지고 있지 않음.
 var cookieParser = require('cookie-parser'); // cookie 값을 사용할때 붙이는 미들웨어
 
-app.use(cookieParser());
+app.use(cookieParser('123124#$%^%%#$@#134%%$%#$@')); // server에서
 
 var products = {
   1: {title: 'super mouse'},
@@ -33,9 +33,9 @@ cart = (제품id : 갯수)
 app.get('/cart/:id', function(req, res){
   var id = req.params.id;
   var cart;
-  if(req.cookies.cart)
+  if(req.signedCookies.cart)
   {
-    cart = req.cookies.cart;
+    cart = req.signedCookies.cart;
   }
   else
   {
@@ -47,12 +47,12 @@ app.get('/cart/:id', function(req, res){
     cart[id] = 0;
   }
   cart[id] = parseInt(cart[id])+1;
-  res.cookie('cart', cart);
+  res.cookie('cart', cart, {signed:true});
   res.redirect('/cart');
 });
 
 app.get('/cart', function(req, res){
-  var carts = req.cookies.cart;
+  var carts = req.signedCookies.cart;
   if(!carts)
   {
     res.send('Empty carts!');
@@ -72,7 +72,8 @@ app.get('/cart', function(req, res){
 
 app.get('/count', function(req, res){
 
-  var cookie_count = parseInt(req.cookies.count);
+  // var cookie_count = parseInt(req.cookies.count);
+  var cookie_count = parseInt(req.signedCookies.count); //cookie 암호화. 암호화된 쿠키를 서버로 보냄.
 
   if(cookie_count){
     //cookie_count++;
@@ -82,7 +83,8 @@ app.get('/count', function(req, res){
     cookie_count = 1;
   }
 
-  res.cookie('count', cookie_count);
+  // res.cookie('count', cookie_count);
+  res.cookie('count', cookie_count, {signed:true});
   res.send('Count : ' + cookie_count);
 });
 
