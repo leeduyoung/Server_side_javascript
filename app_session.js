@@ -6,7 +6,7 @@ var app = express();
 app.use(session({
   secret: '1@%24^%$3^*&98&^%$', //암호화할 키값 입력
   resave: false,
-  saveUnitialized: true
+  saveUninitialized: true
 }));
 
 app.use(bodyParser.urlencoded({extended: false}));
@@ -54,8 +54,9 @@ app.get('/auth/login', function(req, res){
 
 app.post('/auth/login', function(req, res){
   var userDB = {
-    username: 'leedu',
-    password: '1234'
+    username: 'leeduyoung',
+    password: '1234',
+    displayName: 'leedu'
   };
 
   var username = req.body.username;
@@ -64,12 +65,36 @@ app.post('/auth/login', function(req, res){
   //DB에서 데이터 처리 > 코드로 대체(복잡성 최소화)
   if(username === userDB.username && password === userDB.password)
   {
-    //res.send('Hello ' + username);
+    req.session.displayName = userDB.displayName;
     res.redirect('/welcome');
   }
   else
   {
     res.send('Failed to Login. <p><a href="/auth/login">login</a></p>')
   }
-  res.send(req.body.username);
+});
+
+app.get('/welcome', function(req, res){
+  if(req.session.displayName)
+  {
+    // 정상적인 로그인 상황
+    res.send(`
+        <h1>Hello, ${req.session.displayName}</h1>
+        <a href="/auth/logout">Logout</a>
+      `);
+  }
+  else
+  {
+    // 로그인 안하고 url을 통해 접근할 경우
+    res.send(`
+        <h1>Welcome</h1>
+        <a href="/auth/login">Login</a>
+      `);
+  }
+});
+
+// logout시 세션정보를 날려야함. (지워야함)
+app.get('/auth/logout', function(req, res){
+  delete req.session.displayName; //자바스크립트 명령. 세션지우기.
+  res.redirect('/auth/login');
 });
