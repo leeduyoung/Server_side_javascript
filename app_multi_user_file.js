@@ -3,6 +3,8 @@ var session = require('express-session'); // 세션정보는 메모리에 저장
 var bodyParser = require('body-parser');
 var app = express();
 var FileStore = require('session-file-store')(session); // 세션 정보를 메모리에 저장하지 않고 파일에 저장할때 사용.
+var md5 = require('md5');
+var sha256 = require('sha256');
 
 app.use(session({
   secret: '1@%24^%$3^*&98&^%$', //암호화할 키값 입력
@@ -18,30 +20,24 @@ app.listen(3000, function(){
   console.log('Connect 3000 port');
 });
 
-var userDB = [{
-  username: 'leeduyoung',
-  password: '1234',
-  displayName: 'leedu'
-}];
+var salt = '!@#$%^&*(*&^%$)';
 
-app.get('/count', function(req, res){
-
-  console.log(req);
-  //console.log(req.session);
-  if(req.session.count)
+var userDB = [
   {
-    req.session.count++;
-  }
-  else
+    username: 'leeduyoung',
+    //password: '9802a51cbde83d86a73dbd127e80e972',  //md5 hash value
+    password: '240d1ade20e045256584e16d38678f09ab28d46c207bd9c91a3c59e4462b4221',
+    salt: '!@#$%#',
+    displayName: 'leedu'
+  },
   {
-    req.session.count = 1;
+    username: 'dylee',
+    //password: '82687491b97b9d07e34cf59e3818e9d0',  //md5 hash value
+    password: 'c43b8a22fe8ad726a8baf84919ff4668570a0689a88cc9db16bf96392a79b202',
+    salt: '!@1$5#$23%#',
+    displayName: 'dylee'
   }
-  res.send('count: '+req.session.count);
-});
-
-app.get('/tmp', function(req, res){
-  res.send('result: '+ req.session.count);
-});
+];
 
 app.get('/auth/login', function(req, res){
   var output=`
@@ -61,6 +57,7 @@ app.get('/auth/login', function(req, res){
   res.send(output);
 });
 
+
 app.post('/auth/login', function(req, res){
   var username = req.body.username;
   var password = req.body.password;
@@ -68,26 +65,15 @@ app.post('/auth/login', function(req, res){
   for(var i = 0; i < userDB.length; i++)
   {
     var user = userDB[i];
-    if(username === user.username && password === user.password)
+    if(username === user.username && sha256(password+user.salt) === user.password)
     {
       req.session.displayName = user.displayName;
       return req.session.save(function(){
         res.redirect('/welcome');
       });
     }
-    res.send('Failed to Login. <p><a href="/auth/login">login</a></p>')
   }
-
-  // //DB에서 데이터 처리 > 코드로 대체(복잡성 최소화)
-  // if(username === userDB.username && password === userDB.password)
-  // {
-  //   req.session.displayName = userDB.displayName;
-  //   res.redirect('/welcome');
-  // }
-  // else
-  // {
-  //   res.send('Failed to Login. <p><a href="/auth/login">login</a></p>')
-  // }
+  res.send('Failed to Login. <p><a href="/auth/login">login</a></p>')
 });
 
 app.get('/welcome', function(req, res){
