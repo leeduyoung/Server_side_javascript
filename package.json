@@ -26,9 +26,11 @@
     "express": "^4.13.4",
     "express-session": "^1.13.0",
     "jade": "^1.11.0",
+    "md5": "^2.1.0",
     "multer": "^1.1.0",
     "orientjs": "^2.2.0-beta2",
     "session-file-store": "^0.2.0",
+    "sha256": "^0.2.0",
     "underscore": "^1.8.3"
   }
 }
