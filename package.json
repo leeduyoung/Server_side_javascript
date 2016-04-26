@@ -29,6 +29,7 @@
     "md5": "^2.1.0",
     "multer": "^1.1.0",
     "orientjs": "^2.2.0-beta2",
+    "pbkdf2-password": "^1.1.0",
     "session-file-store": "^0.2.0",
     "sha256": "^0.2.0",
     "underscore": "^1.8.3"
