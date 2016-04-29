@@ -5,11 +5,11 @@ var fs = require('fs');
 var multer = require('multer');
 var storage = multer.diskStorage({ //callback함수 안에 여러가지 조건문 등을 넣어서 처리 할 수 있다.
   destination: function (req, file, cb) {
-    cb(null, 'uploads/')
+    cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
     //cb(null, file.originalname + '-' + Date.now())
-    cb(null, file.originalname)
+    cb(null, file.originalname);
   }
 });
 //var upload = multer({dest : 'uploads/'}); //multer모듈을 사용할 수 있도록 해줌. (경로설정)
@@ -60,7 +60,7 @@ app.post('/topic/add', function(req, res){
     }
   }).then(function(results){
     res.redirect('/topic/'+encodeURIComponent(results[0]['@rid']));
-  })
+  });
 });
 
 app.get('/topic/:id/edit', function(req, res){

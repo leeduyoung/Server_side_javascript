@@ -29,7 +29,7 @@ app.use(session({
   secret: '1@%24^%$3^*&98&^%$', //암호화할 키값 입력
   resave: false,
   saveUninitialized: true,
-  store: new FileStore() //추가 > sessions 디렉터리 생성됨.
+  store: new FileStore() //추가 > sessions 디렉터리 생성됨.1
   // 세션을 어디에 저장하고 싶은지 원하는 모듈을 붙여주면 됨.
 }));
 
@@ -166,6 +166,7 @@ app.post('/auth/register', function(req, res){
     password: req.body.password
   };
 
+// If the salt is left undefined, a new salt is generated.
   hasher(opts, function(err, pass, salt, hash) {
     var insertUser =
     {
