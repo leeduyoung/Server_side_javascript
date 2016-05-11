@@ -21,7 +21,7 @@ app.use('/user', express.static('uploads')); //uploads 디렉터리의 이미지
 app.use(bodyParser.urlencoded({extended: false}));
 app.locals.pretty = true;
 
-app.get('/upload', function(req, res){
+app.get('/upload', function (req, res) {
   res.render('upload');
 });
 
