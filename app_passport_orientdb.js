@@ -108,23 +108,28 @@ passport.use(new FacebookStrategy({
     // profile 정보를 사용하여 사용자가 있다면 done 없다면 err
     console.log(profile);
     var authId = 'facebook:'+profile.id;
-    for(var i=0; i<userDB.length; i++)
-    {
-      var user = userDB[i];
-      if(user.authId === authId)
-      {
-        // 이미 존재하는 사용자
-        return done(null, user);
+    var sql = 'SELECT FROM user WHERE authId=:authId';
+    db.query(sql, {params:{authId:authId}}).then(function(results){
+      console.log(results, authId);
+      if(results.length === 0){
+        var insertUser = {
+          'authId': authId,
+          'displayName': profile.displayName,
+          'email': profile.emails[0].value
+        };
+        var sql = 'INSERT INTO user (authId, displayName, email) VALUES (:authId, :displayName, :email)';
+        db.query(sql, {params:insertUser}).then(function () {
+          done(null, insertUser);
+        }, function (error) {
+          console.log(error);
+          done('Error');
+        })
       }
-    }
-    // 존재하지 않을 경우 새로운 유저값을 데이터베이스에 추가
-    var insertUser = {
-      'authId' : authId,
-      'displayName' : profile.displayName,
-      'email' : profile.emails[0].value
-    };
-    userDB.push(insertUser);
-    done(null, insertUser);
+      else{
+        return done(null, results[0]);
+      }
+
+    });
   }
 ));
 

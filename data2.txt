@@ -1,0 +1,2 @@
+Hello sync_async test!
+hihi!
